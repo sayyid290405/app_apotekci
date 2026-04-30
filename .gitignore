@@ -1,0 +1,46 @@
+# Object file
+*.o
+*.ali
+
+# MacOS
+.DS_Store
+
+# CodeIgniter cache & logs
+application/cache/*
+!application/cache/index.html
+
+application/logs/*
+!application/logs/index.html
+
+!application/*/.htaccess
+
+# Composer
+composer.lock
+/vendor/
+
+# Database test
+tests/mocks/database/ci_test.sqlite
+
+# User guide build
+user_guide_src/build/*
+user_guide_src/cilexer/build/*
+user_guide_src/cilexer/dist/*
+user_guide_src/cilexer/pycilexer.egg-info/*
+
+# IDE Files
+/nbproject/
+.idea/*
+
+# Sublime Text
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
+
+# Testing
+/tests/tests/
+/tests/results/
+
+# ENV (penting!)
+.env

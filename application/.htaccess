@@ -1,0 +1,19 @@
+<!-- <IfModule authz_core_module>
+    Require all denied
+</IfModule>
+<IfModule !authz_core_module>
+    Deny from all
+</IfModule> -->
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /APP_apotekci3/
+    
+    # Redirect trailing slashes
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ index.php/$1 [L]
+</IfModule>
+
+# Protect application and system folders
+RedirectMatch 403 ^/(application|system|tests|user_guide)/.*
