@@ -86,12 +86,6 @@ value="<?= $this->security->get_csrf_hash(); ?>" />
            value="<?= $produk->harga_beli ?? '' ?>" required>
 </div>
 
-<<<<<<< HEAD
-<div class="col-md-3 mb-3">
-    <label>Harga Jual</label>
-    <input type="number" name="harga_jual" class="form-control"
-           value="<?= $produk->harga_jual ?? '' ?>" required>
-=======
 <div class="row">
     
     <div class="col-md-4 mb-3">
@@ -150,7 +144,6 @@ value="<?= $this->security->get_csrf_hash(); ?>" />
         </table>
         <small class="text-danger">* Baris pertama harus satuan terkecil (Konversi = 1).</small>
     </div>
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
 </div>
 
 <!-- STOK -->
@@ -194,8 +187,6 @@ value="<?= $this->security->get_csrf_hash(); ?>" />
 </form>
 
 <script>
-<<<<<<< HEAD
-=======
 document.addEventListener('click', function (e) {
     // 1. Sesuaikan dengan ID "add-satuan" yang ada di tombol kamu
     if (e.target && (e.target.id === 'add-satuan' || e.target.closest('#add-satuan'))) {
@@ -237,7 +228,6 @@ document.getElementById('mode_gambar').onchange = function(){
 
 
 <script>
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
 document.getElementById('mode_gambar').onchange = function(){
 
     let upload = document.getElementById('input_upload');

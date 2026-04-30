@@ -1,15 +1,5 @@
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-
-    # Base URL sesuai folder project
-    RewriteBase /APP_apotekci3/
-
-    # Hapus index.php dari URL
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)$ index.php/$1 [L]
 RewriteEngine On
+RewriteBase /APP_apotekci3/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php/$1 [L]
-</IfModule>

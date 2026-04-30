@@ -26,14 +26,6 @@
         .right{text-align:right;}
         .bold{font-weight:bold;}
 
-<<<<<<< HEAD
-        .total{
-            font-size:14px;
-            font-weight:bold;
-        }
-
-=======
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
         .btn{
             display:block;
             margin-top:10px;
@@ -53,8 +45,6 @@
 
 <body>
 
-<<<<<<< HEAD
-=======
 <?php
 // ================= SAFE DATA =================
 $pesanan = $pesanan ?? null;
@@ -74,7 +64,6 @@ if($subtotal == 0){
 $inv = 'INV-' . str_pad($pesanan->id_pesanan ?? 0, 6, '0', STR_PAD_LEFT);
 ?>
 
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
 <!-- ================= HEADER ================= -->
 <div class="center">
     <h2>💊 MyApotek</h2>
@@ -86,14 +75,6 @@ $inv = 'INV-' . str_pad($pesanan->id_pesanan ?? 0, 6, '0', STR_PAD_LEFT);
 
 <table>
 <tr>
-<<<<<<< HEAD
-    <td>Tanggal</td>
-    <td class="right"><?= date('d/m/Y H:i', strtotime($pesanan->created_at)) ?></td>
-</tr>
-<tr>
-    <td>Kasir</td>
-    <td class="right"><?= $pesanan->nama ?></td>
-=======
     <td>ID</td>
     <td class="right"><?= $inv ?></td>
 </tr>
@@ -110,14 +91,11 @@ $inv = 'INV-' . str_pad($pesanan->id_pesanan ?? 0, 6, '0', STR_PAD_LEFT);
     <td class="right">
         <?= $pesanan->nama_kasir ?? $pesanan->nama ?? 'Admin' ?>
     </td>
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
 </tr>
 </table>
 
 <div class="line"></div>
 
-<<<<<<< HEAD
-=======
 <!-- ================= LABEL TRANSAKSI ================= -->
 <div class="center">
     <strong>
@@ -142,18 +120,12 @@ $inv = 'INV-' . str_pad($pesanan->id_pesanan ?? 0, 6, '0', STR_PAD_LEFT);
 
 <div class="line"></div>
 
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
 <!-- ================= BODY ================= -->
 <table>
 <?php foreach($detail as $d): ?>
 <tr>
     <td colspan="2"><?= $d->nama_produk ?></td>
 </tr>
-<<<<<<< HEAD
-<tr>
-    <td><?= $d->jumlah ?> x <?= number_format($d->harga) ?></td>
-    <td class="right"><?= number_format($d->subtotal) ?></td>
-=======
 
 <?php if($isResep && !empty($d->dosis)): ?>
 <tr>
@@ -168,7 +140,6 @@ $inv = 'INV-' . str_pad($pesanan->id_pesanan ?? 0, 6, '0', STR_PAD_LEFT);
     <td class="right">
         <?= number_format($d->subtotal ?? ($d->harga * $d->jumlah)) ?>
     </td>
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
 </tr>
 <?php endforeach; ?>
 </table>
@@ -178,18 +149,6 @@ $inv = 'INV-' . str_pad($pesanan->id_pesanan ?? 0, 6, '0', STR_PAD_LEFT);
 <!-- ================= FOOTER ================= -->
 <table>
 <tr>
-<<<<<<< HEAD
-    <td>Total</td>
-    <td class="right bold">Rp <?= number_format($pesanan->total_harga) ?></td>
-</tr>
-<tr>
-    <td>Bayar</td>
-    <td class="right">Rp <?= number_format($pesanan->bayar) ?></td>
-</tr>
-<tr>
-    <td>Kembali</td>
-    <td class="right">Rp <?= number_format($pesanan->kembalian) ?></td>
-=======
     <td>Subtotal</td>
     <td class="right">Rp <?= number_format($subtotal) ?></td>
 </tr>
@@ -219,47 +178,23 @@ $inv = 'INV-' . str_pad($pesanan->id_pesanan ?? 0, 6, '0', STR_PAD_LEFT);
 <tr>
     <td>Kembali</td>
     <td class="right">Rp <?= number_format($pesanan->kembalian ?? 0) ?></td>
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
 </tr>
 </table>
 
 <div class="line"></div>
 
 <div class="center">
-<<<<<<< HEAD
-    <p>Terima kasih, Semoga Lekas Sembuh <p>
-=======
     <p>Terima kasih, Semoga Lekas Sembuh</p>
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
     <small>Barang yang sudah dibeli tidak dapat dikembalikan</small>
 </div>
 
 <!-- ================= BUTTON ================= -->
-<<<<<<< HEAD
- 
- <!-- KEMBALI -->
-=======
 <div class="no-print">
 
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
     <a href="<?= base_url('dashboard') ?>" class="btn">
         ⬅ Kembali ke Dashboard
     </a>
 
-<<<<<<< HEAD
-    <a href="<?= base_url('kasir') ?>" class="btn w-100 mt-2" style="background:#2563eb;">
-    ➕ Transaksi Baru
-    </a>
-
-<!-- <div class="no-print">
-    <a href="<?= base_url('kasir/pdf/'.$pesanan->id_pesanan) ?>" class="btn">
-        ⬇ Download PDF
-    </a> -->
-
-    <button onclick="window.print()" class="btn w-100 mt-2">
-        🖨 Print
-    </button>
-=======
     <a href="<?= base_url('kasir') ?>" class="btn" style="background:#2563eb;">
         ➕ Transaksi Baru
     </a>
@@ -268,7 +203,6 @@ $inv = 'INV-' . str_pad($pesanan->id_pesanan ?? 0, 6, '0', STR_PAD_LEFT);
         🖨 Print
     </button>
 
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
 </div>
 
 </body>

@@ -8,8 +8,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Diset otomatis agar tidak perlu diubah di komputer lain.
 | Contoh hasil: http://localhost/utspbwrizky/
 */
-$root  = "http://" . $_SERVER['HTTP_HOST'];
-$root .= str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']);
+$root  = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") ? "https" : "http");
+$root .= "://".$_SERVER['HTTP_HOST'];
+$root .= str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
+
 $config['base_url'] = $root;
 
 /*
@@ -102,11 +104,7 @@ $config['encryption_key'] = 'PBWRIZKY_2025_SALESORDER_KEY';
 |--------------------------------------------------------------------------
 | Direkomendasikan diaktifkan untuk form login & input.
 */
-<<<<<<< HEAD
-$config['csrf_protection'] = FALSE;
-=======
-$config['csrf_protection'] = TRUE;
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
+
 $config['csrf_token_name'] = 'csrf_token';
 $config['csrf_cookie_name'] = 'csrf_cookie';
 $config['csrf_expire'] = 7200;

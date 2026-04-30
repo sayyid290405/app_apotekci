@@ -52,4 +52,16 @@ class Users_model extends CI_Model {
     {
         return $this->db->get($this->rolesTable)->result();
     }
+    public function get_user_by_email($email){
+        return $this->db
+            ->where('email', $email)
+            ->get('users')
+            ->row();
+    }
+
+    // Insert user (register)
+    public function insert_user($data){
+        return $this->db->insert('users', $data);
+    }
+
 }

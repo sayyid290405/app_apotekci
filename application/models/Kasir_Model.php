@@ -15,8 +15,6 @@ class Kasir_model extends CI_Model {
         ->get()
         ->result();
 }
-<<<<<<< HEAD
-=======
 
 public function getAllWithSatuan()
 {
@@ -35,5 +33,4 @@ public function getAllWithSatuan()
 
     return $produk;
 }
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
 }
