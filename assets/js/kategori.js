@@ -18,6 +18,18 @@ document.addEventListener('DOMContentLoaded', function(){
 
                     let html = '';
 
+<<<<<<< HEAD
+=======
+                    if (!data || data.length === 0) {
+        html = `
+        <tr>
+            <td colspan="5" class="text-center text-muted">
+                🔍 Data tidak ditemukan
+            </td>
+        </tr>`;
+    } else {
+
+>>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
                     data.forEach((k, i) => {
                         html += `
                         <tr>
@@ -31,6 +43,10 @@ document.addEventListener('DOMContentLoaded', function(){
                             </td>
                         </tr>`;
                     });
+<<<<<<< HEAD
+=======
+                }
+>>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
 
                     table.innerHTML = html;
 

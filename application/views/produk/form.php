@@ -86,10 +86,71 @@ value="<?= $this->security->get_csrf_hash(); ?>" />
            value="<?= $produk->harga_beli ?? '' ?>" required>
 </div>
 
+<<<<<<< HEAD
 <div class="col-md-3 mb-3">
     <label>Harga Jual</label>
     <input type="number" name="harga_jual" class="form-control"
            value="<?= $produk->harga_jual ?? '' ?>" required>
+=======
+<div class="row">
+    
+    <div class="col-md-4 mb-3">
+        <label class="fw-bold">Stok (Satuan Terkecil)</label>
+        <input type="number" name="stok" class="form-control"
+               value="<?= $produk->stok ?? 0 ?>" required>
+        <small class="text-muted">Misal: Total tablet/pcs.</small>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <label class="fw-bold">Tanggal Kadaluarsa</label>
+        <input type="date" name="tanggal_kadaluarsa" class="form-control"
+               value="<?= $produk->tanggal_kadaluarsa ?? '' ?>">
+    </div>
+</div>
+
+<hr>
+
+<div class="mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold text-success"><i class="fas fa-tags"></i> Pengaturan Satuan & Harga Jual</h5>
+        <button type="button" class="btn btn-sm btn-primary" id="add-satuan">
+            ➕ Tambah Satuan (Strip/Box)
+        </button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered bg-light">
+            <thead class="table-dark">
+                <tr>
+                    <th>Nama Satuan</th>
+                    <th>Konversi (Isi)</th>
+                    <th>Harga Jual</th>
+                    <th width="50px"></th>
+                </tr>
+            </thead>
+            <tbody id="satuan-container">
+                <?php if(isset($satuan) && !empty($satuan)): ?>
+                    <?php foreach($satuan as $s): ?>
+                        <tr>
+                            <td><input type="text" name="nama_satuan[]" class="form-control" value="<?= $s->nama_satuan ?>" placeholder="Contoh: Tablet" required></td>
+                            <td><input type="number" name="konversi[]" class="form-control" value="<?= $s->konversi ?>" placeholder="Isi" required></td>
+                            <td><input type="number" name="harga_satuan[]" class="form-control" value="<?= $s->harga ?>" placeholder="Harga Jual" required></td>
+                            <td><button type="button" class="btn btn-danger remove-row">❌</button></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td><input type="text" name="nama_satuan[]" class="form-control" placeholder="Contoh: Tablet" required></td>
+                        <td><input type="number" name="konversi[]" class="form-control" value="1" placeholder="Isi" readonly></td>
+                        <td><input type="number" name="harga_satuan[]" class="form-control" placeholder="Harga Jual" required></td>
+                        <td></td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+        <small class="text-danger">* Baris pertama harus satuan terkecil (Konversi = 1).</small>
+    </div>
+>>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
 </div>
 
 <!-- STOK -->
@@ -133,6 +194,50 @@ value="<?= $this->security->get_csrf_hash(); ?>" />
 </form>
 
 <script>
+<<<<<<< HEAD
+=======
+document.addEventListener('click', function (e) {
+    // 1. Sesuaikan dengan ID "add-satuan" yang ada di tombol kamu
+    if (e.target && (e.target.id === 'add-satuan' || e.target.closest('#add-satuan'))) {
+        
+        // 2. Sesuaikan dengan ID "satuan-container" yang ada di tbody kamu
+        const tabelBody = document.getElementById('satuan-container');
+        
+        const barisBaru = `
+            <tr>
+                <td><input type="text" name="nama_satuan[]" class="form-control" placeholder="Strip/Box" required></td>
+                <td><input type="number" name="konversi[]" class="form-control" placeholder="Isi" required></td>
+                <td><input type="number" name="harga_satuan[]" class="form-control" placeholder="Harga Jual" required></td>
+                <td><button type="button" class="btn btn-danger btn-sm btn-hapus-satuan">❌</button></td>
+            </tr>`;
+        
+        tabelBody.insertAdjacentHTML('beforeend', barisBaru);
+    }
+
+    // 3. Logika Tombol Hapus (Targetkan class btn-hapus-satuan atau remove-row)
+    if (e.target && (e.target.classList.contains('btn-hapus-satuan') || e.target.classList.contains('remove-row'))) {
+        e.target.closest('tr').remove();
+    }
+});
+
+// Script untuk Toggle Gambar
+document.getElementById('mode_gambar').onchange = function(){
+    let upload = document.getElementById('input_upload');
+    let url = document.getElementById('input_url');
+
+    if(this.value === 'upload'){
+        upload.style.display = 'block';
+        url.style.display = 'none';
+    } else {
+        upload.style.display = 'none';
+        url.style.display = 'block';
+    }
+};
+</script>
+
+
+<script>
+>>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
 document.getElementById('mode_gambar').onchange = function(){
 
     let upload = document.getElementById('input_upload');

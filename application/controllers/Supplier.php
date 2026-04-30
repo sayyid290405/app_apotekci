@@ -8,7 +8,11 @@ class Supplier extends CI_Controller {
     }
 
     public function index()
+<<<<<<< HEAD
     {
+=======
+{
+>>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
     $this->load->library('pagination');
 
     $keyword = $this->input->get('q'); // 🔥 ambil dari URL

@@ -30,8 +30,13 @@
     </a>
     <?php endif; ?>
 
+<<<<<<< HEAD
     <a href="<?= base_url('pelanggan') ?>">
         <i class="fa fa-users me-2"></i> Pelanggan
+=======
+    <a href="<?= base_url('resep') ?>">
+    <i class="fa fa-file-medical me-2"></i> Resep
+>>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
     </a>
 
     <a href="<?= base_url('laporan') ?>">

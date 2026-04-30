@@ -1,6 +1,4 @@
 <div class="container-fluid">
-<<<<<<< HEAD
-=======
     <style>
         /* clone yang terbang */
 .fly-clone {
@@ -21,7 +19,6 @@
     100% { transform: scale(1); }
 }
     </style>
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
 
 <h4 class="mb-3">🛒 KASIR</h4>
 
@@ -41,29 +38,6 @@
             <div class="card p-3 mb-3 text-center shadow-sm">
 
                 <!-- GAMBAR -->
-<<<<<<< HEAD
-                <img src="<?= !empty($p->gambar) ? $p->gambar : 'https://via.placeholder.com/150' ?>" 
-                     class="img-fluid mb-2"
-                     style="height:120px; object-fit:cover; border-radius:10px;">
-
-                <!-- NAMA -->
-                <h6 class="fw-bold"><?= htmlspecialchars($p->nama_produk) ?></h6>
-
-                <!-- INFO -->
-                <small class="text-muted">
-                    <?= $p->nama_kategori ?> | <?= $p->nama_supplier ?>
-                </small>
-
-                <!-- HARGA -->
-                <div class="text-success fw-bold mt-1">
-                    Rp <?= number_format($p->harga_jual,0,',','.') ?>
-                </div>
-
-                <!-- BUTTON -->
-                <button class="btn btn-success btn-sm mt-2 w-100"
-                    onclick="tambah(<?= $p->id_produk ?>, `<?= htmlspecialchars($p->nama_produk) ?>`, <?= $p->harga_jual ?>)">
-                    + Tambah
-=======
         <img src="<?= !empty($p->gambar) ? $p->gambar : 'https://via.placeholder.com/150' ?>" 
              class="img-fluid mb-2"
              style="height:120px; object-fit:cover; border-radius:10px;">
@@ -92,9 +66,8 @@
 
                 <!-- BUTTON -->
                 <button class="btn btn-success"
-                onclick="tambahMulti(this, <?= $p->id_produk ?>, '<?= addslashes($p->nama_produk) ?>'); flyToCart(this)">
+                onclick="tambah(<?= $p->id_produk ?>, '<?= addslashes($p->nama_produk) ?>', <?= $p->harga_jual ?>); flyToCart(this)">
                 + Tambah
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
                 </button>
 
             </div>
@@ -121,25 +94,6 @@
 
             <hr>
 
-<<<<<<< HEAD
-            <!-- TOTAL -->
-            <h5>Total: Rp <span id="total">0</span></h5>
-
-            <!-- INPUT BAYAR -->
-            <input type="number" id="bayar" class="form-control mt-2" placeholder="Masukkan uang">
-
-            <!-- KEMBALIAN -->
-            <h6 class="mt-2">Kembalian: Rp <span id="kembalian">0</span></h6>
-
-            <!-- QUICK BUTTON -->
-            <div class="mt-2 d-flex gap-2 flex-wrap">
-                <button class="btn btn-light btn-sm" onclick="setBayar(10000)">10K</button>
-                <button class="btn btn-light btn-sm" onclick="setBayar(20000)">20K</button>
-                <button class="btn btn-light btn-sm" onclick="setBayar(50000)">50K</button>
-                <button class="btn btn-light btn-sm" onclick="setBayar(100000)">100K</button>
-            </div>
-
-=======
             <div class="d-flex justify-content-between">
         <span>Subtotal</span>
         <strong id="subtotal">Rp 0</strong>
@@ -174,7 +128,6 @@
 
     <div class="mt-2">
         Kembalian: <strong id="kembalian">Rp 0</strong>
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
             <!-- CHECKOUT -->
             <button type="button" class="btn btn-primary w-100 mt-3" onclick="checkout()">
                 💳 Bayar
@@ -192,14 +145,6 @@
     <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" 
            value="<?= $this->security->get_csrf_hash(); ?>">
 
-<<<<<<< HEAD
-    <input type="hidden" name="produk" id="produkInput">
-    <input type="hidden" name="total" id="totalInput">
-    <input type="hidden" name="bayar" id="bayarInput">
-
-</form>
-<!-- ========================= -->
-=======
     <!-- EXISTING -->
     <input type="hidden" name="produk" id="produkInput">
 
@@ -213,46 +158,30 @@
 
 </form>
 
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
 <!-- SCRIPT -->
 <!-- ========================= -->
 <script>
 const BASE_URL = "<?= base_url() ?>";
 let cart = [];
-<<<<<<< HEAD
-=======
 let PPN_RATE = 0.11;
 let pakaiPPN = false;
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
 
 // =========================
 // TAMBAH PRODUK
 // =========================
-<<<<<<< HEAD
 function tambah(id,nama,harga){
-=======
-function tambah(id,nama,harga,satuan='pcs'){
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
     let item = cart.find(i => i.id == id);
 
     if(item){
         item.qty++;
     } else {
-<<<<<<< HEAD
         cart.push({id,nama,harga,qty:1});
     }
 
-    render();
-}
-
-=======
-        cart.push({id,nama,harga,qty:1,satuan,konversi:1});
-    }
-
-    playBeep();
+    playBeep();         // 🔊 suara
     render(id);
 }
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
+
 // =========================
 // KURANG PRODUK
 // =========================
@@ -266,40 +195,6 @@ function kurang(id){
         }
     }
 
-<<<<<<< HEAD
-    render();
-}
-
-// =========================
-// RENDER CART
-// =========================
-function render(){
-    let html = '';
-    let total = 0;
-
-    cart.forEach(i => {
-        let sub = i.qty * i.harga;
-        i.subtotal = sub;
-        total += sub;
-
-        html += `
-        <tr>
-            <td>${i.nama}</td>
-            <td>
-                <button class="btn btn-sm btn-danger" onclick="kurang(${i.id})">-</button>
-                <span class="mx-2">${i.qty}</span>
-                <button class="btn btn-sm btn-success" onclick="tambah(${i.id}, \`${i.nama}\`, ${i.harga})">+</button>
-            </td>
-            <td>Rp ${rupiah(sub)}</td>
-        </tr>`;
-    });
-
-    document.getElementById('cart').innerHTML = html;
-    document.getElementById('total').innerText = rupiah(total);
-
-    hitungKembalian();
-}                
-=======
     render(id); 
 }
 
@@ -313,13 +208,11 @@ function tambahMulti(el, id, nama){
 
     let select = el.parentElement.querySelector('.satuan-select');
 
-    let harga = parseInt(select.options[select.selectedIndex].dataset.harga) || 0;
-    let konversi = parseInt(select.value) || 1;
-    let satuan = select.options[select.selectedIndex].dataset.satuan || '-';
+    let harga = parseInt(select.options[select.selectedIndex].dataset.harga);
+    let konversi = parseInt(select.value);
+    let satuan = select.options[select.selectedIndex].dataset.satuan;
 
-    let key = id + '_' + konversi;
-
-    let item = cart.find(i => (i.id + '_' + i.konversi) === key);
+    let item = cart.find(i => i.id == id && i.konversi == konversi);
 
     if(item){
         item.qty++;
@@ -328,40 +221,25 @@ function tambahMulti(el, id, nama){
             id,
             nama,
             harga,
-            qty:1,
-            satuan,          // ✅ FIX
-            konversi         // ✅ FIX
+            konversi,
+            satuan,
+            qty:1
         });
     }
 
-    render(key);
+    render(id);
 }
 
-function tambahMultiDirect(key){
+function tambahMultiDirect(id, nama, harga, konversi, satuan){
 
-    let item = cart.find(i => (i.id + '_' + i.konversi) === key);
+    let item = cart.find(i => i.id == id && i.konversi == konversi);
 
     if(item){
         item.qty++;
     }
 
-    render(key);
+    render(id);
 }
-
-function kurangMulti(key){
-
-    let item = cart.find(i => (i.id + '_' + i.konversi) === key);
-
-    if(item){
-        item.qty--;
-        if(item.qty <= 0){
-            cart = cart.filter(i => (i.id + '_' + i.konversi) !== key);
-        }
-    }
-
-    render(key);
-}
-
 
 // dom klik ppn
 document.addEventListener('DOMContentLoaded', function(){
@@ -386,67 +264,33 @@ document.addEventListener('DOMContentLoaded', function(){
 // =========================
 // RENDER CART
 // =========================
-
-
-function updateQty(index, value){
-    items[index].qty = parseInt(value) || 1;
-    renderResep(); // 🔥 WAJIB
-}
-
-function updateDosis(index, value){
-    items[index].dosis = value;
-}
-
 // tambahkan class dinamis jika baru ditambah
-function render(lastUpdatedKey = null){
+function render(lastUpdatedId = null){
 
     let html = '';
     let subtotal = 0;
 
     cart.forEach(i => {
-
-        // ================= KEY UNIK (ANTI TABRAKAN)
-        let key = i.id + '_' + i.konversi;
-
         let sub = i.qty * i.harga;
         subtotal += sub;
 
-        const isUpdated = (lastUpdatedKey && key === lastUpdatedKey)
-            ? 'cart-item-added'
-            : '';
+        const isUpdated = (lastUpdatedId && i.id == lastUpdatedId) ? 'cart-item-added' : '';
 
         html += `
         <div class="d-flex justify-content-between align-items-center border-bottom py-2 ${isUpdated}">
 
-            <!-- INFO PRODUK -->
-            <div style="flex:1">
+            <div>
                 <strong>${i.nama}</strong><br>
-                <small>
-                    Rp ${rupiah(i.harga)} / ${i.satuan || '-'}
-                </small>
+                <small>Rp ${rupiah(i.harga)}</small>
             </div>
 
-            <!-- QTY CONTROL -->
             <div class="d-flex align-items-center">
-
-                <button 
-                    onclick="kurangMulti('${key}')" 
-                    class="btn btn-sm btn-outline-danger">
-                    -
-                </button>
-
+                <button onclick="kurang(${i.id})" class="btn btn-sm btn-outline-danger">-</button>
                 <span class="mx-2">${i.qty}</span>
-
-                <button 
-                    onclick="tambahMultiDirect('${key}')" 
-                    class="btn btn-sm btn-outline-success">
-                    +
-                </button>
-
+                <button onclick="tambah(${i.id}, '${escapeQuotes(i.nama)}', ${i.harga})" class="btn btn-sm btn-outline-success">+</button>
             </div>
 
-            <!-- SUBTOTAL -->
-            <div style="min-width:90px; text-align:right;">
+            <div>
                 Rp ${rupiah(sub)}
             </div>
 
@@ -455,18 +299,15 @@ function render(lastUpdatedKey = null){
 
     document.getElementById('cart').innerHTML = html;
 
-    // ================= HITUNG TOTAL
     hitungTotal(subtotal);
 
-    // ================= ANIMASI RESET
+    // hilangkan class animasi setelah selesai (opsional)
     setTimeout(()=>{
         document.querySelectorAll('.cart-item-added').forEach(el=>{
             el.classList.remove('cart-item-added');
         });
     }, 450);
 }
-
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
 
 // =========================
 // SET BAYAR CEPAT
@@ -476,50 +317,63 @@ function setBayar(n){
     hitungKembalian();
 }
 
-<<<<<<< HEAD
-// =========================
-// HITUNG KEMBALIAN
-// =========================
-function hitungKembalian(){
-    let total = cart.reduce((a,b)=>a + (b.subtotal || 0), 0);
-    let bayar = parseInt(document.getElementById('bayar').value) || 0;
-
-    let kembali = bayar - total;
-    document.getElementById('kembalian').innerText = rupiah(kembali > 0 ? kembali : 0);
-=======
 // HITUNG TOTAL BAYAR
 
-function hitungTotal(subtotalParam = 0){
-    // Pastikan subtotal numerik
-    let subtotal = parseFloat(subtotalParam) || 0;
+function hitungTotal(subtotal = 0){
+
+    subtotal = parseFloat(subtotal) || 0;
 
     const diskonEl = document.getElementById('diskon');
     const ppnEl    = document.getElementById('ppn');
 
-    const diskonPersen = diskonEl ? parseFloat(diskonEl.value) || 0 : 0;
+    // ✅ deklarasi SEKALI saja
+    const diskon = diskonEl ? parseFloat(diskonEl.value) || 0 : 0;
     const pakaiPPN = ppnEl ? ppnEl.checked : false;
 
-    // Hitung Diskon
-    const nilaiDiskon = subtotal * (diskonPersen / 100);
+    
+    // ================= DISKON
+    const nilaiDiskon = subtotal * (diskon / 100);
     const setelahDiskon = subtotal - nilaiDiskon;
 
-    // Hitung PPN (11%)
+    // ================= PPN
     const nilaiPPN = pakaiPPN ? setelahDiskon * 0.11 : 0;
-    const totalFinal = setelahDiskon + nilaiPPN;
 
-    // Update UI dengan pembulatan
-    if(document.getElementById('subtotal')) document.getElementById('subtotal').innerText = rupiah(subtotal);
-    if(document.getElementById('diskonRp')) document.getElementById('diskonRp').innerText = rupiah(nilaiDiskon);
-    if(document.getElementById('ppnRp'))    document.getElementById('ppnRp').innerText = rupiah(nilaiPPN);
-    if(document.getElementById('total'))    document.getElementById('total').innerText = rupiah(totalFinal);
+    // ================= TOTAL
+    const total = setelahDiskon + nilaiPPN;
 
-    // Simpan ke input hidden untuk dikirim ke PHP
-    if(document.getElementById('totalInput'))   document.getElementById('totalInput').value = Math.round(totalFinal);
-    if(document.getElementById('ppnInput'))     document.getElementById('ppnInput').value = Math.round(nilaiPPN);
-    if(document.getElementById('diskonInput'))  document.getElementById('diskonInput').value = Math.round(nilaiDiskon);
-    if(document.getElementById('subtotalInput')) document.getElementById('subtotalInput').value = Math.round(subtotal);
+    // // ================= DEBUG
+    // console.log({
+    //     subtotal,
+    //     diskon,
+    //     pakaiPPN,
+    //     nilaiDiskon,
+    //     setelahDiskon,
+    //     nilaiPPN,
+    //     total
+    // });
 
-    hitungKembalian(totalFinal);
+    // ================= UPDATE UI
+    const elSubtotal = document.getElementById('subtotal');
+    const elDiskon   = document.getElementById('diskonRp');
+    const elPPN      = document.getElementById('ppnRp');
+    const elTotal    = document.getElementById('total');
+
+    if(elSubtotal) elSubtotal.innerText = rupiah(subtotal);
+    if(elDiskon)   elDiskon.innerText   = rupiah(nilaiDiskon);
+    if(elPPN)      elPPN.innerText      = rupiah(nilaiPPN);
+    if(elTotal)    elTotal.innerText    = rupiah(total);
+
+    // ================= SIMPAN
+    const totalInput  = document.getElementById('totalInput');
+    const ppnInput    = document.getElementById('ppnInput');
+    const diskonInput = document.getElementById('diskonInput');
+
+    if(totalInput)  totalInput.value  = Math.round(total);
+    if(ppnInput)    ppnInput.value    = Math.round(nilaiPPN);
+    if(diskonInput) diskonInput.value = Math.round(nilaiDiskon);
+
+    // ================= KEMBALIAN
+    hitungKembalian(total);
 }
 
 // =========================
@@ -580,91 +434,72 @@ function hitungKembalian(total = null){
     });
 
     return kembali;
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
 }
 
 // =========================
 // CHECKOUT
 // =========================
 function checkout(){
-<<<<<<< HEAD
 
     let btn = document.querySelector('.btn-primary');
     btn.innerText = 'Memproses...';
     btn.disabled = true;
 
-    let total = cart.reduce((a,b)=>a + (b.subtotal || 0), 0);
+    // ================= HITUNG SUBTOTAL DARI CART
+    let subtotal = cart.reduce((a,b)=>a + (b.qty * b.harga), 0);
+
+    // ================= PAKSA HITUNG TOTAL
+    hitungTotal(subtotal);
+
+    // ================= AMBIL SEMUA NILAI (FAIL SAFE)
+    let subtotalVal = parseInt(document.getElementById('subtotalInput')?.value) || subtotal;
+    let diskonVal   = parseInt(document.getElementById('diskonInput')?.value) || 0;
+    let ppnVal      = parseInt(document.getElementById('ppnInput')?.value) || 0;
+    let total       = parseInt(document.getElementById('totalInput')?.value) || subtotalVal;
+
     let bayar = parseInt(document.getElementById('bayar').value) || 0;
 
+    // ================= VALIDASI
     if(cart.length === 0){
         alert('Keranjang kosong!');
         btn.disabled = false;
         btn.innerText = 'Bayar';
-=======
-    let btn = document.querySelector('.btn-primary');
-
-    // 1. Validasi awal
-    if(cart.length === 0){
-        alert('Keranjang kosong!');
         return;
     }
 
-    // 2. Mapping Data (SOLUSI ERROR ID TIDAK VALID)
-    // Kita buat variabel baru 'payload' agar struktur data yang dikirim ke PHP seragam
-    let payload = cart.map(item => {
-        return {
-            id: item.id || item.produk_id, // Pastikan salah satu ada dan jadi 'id'
-            nama: item.nama || item.nama_produk,
-            harga: parseInt(item.harga) || 0,
-            qty: parseInt(item.qty) || 0,
-            satuan: item.satuan || '-',
-            konversi: item.konversi || 1
-        };
-    });
-
-    // 3. Hitung Subtotal dari payload untuk validasi akhir
-    let subtotal = payload.reduce((a, b) => a + (b.qty * b.harga), 0);
-    
-    // Update tampilan UI dan input hidden via fungsi hitungTotal Anda
-    hitungTotal(subtotal);
-
-    // 4. Ambil nilai total dan bayar
-    let total = parseInt(document.getElementById('totalInput')?.value) || subtotal;
-    let bayar = parseInt(document.getElementById('bayar').value) || 0;
-
-    // 5. Validasi Pembayaran
     if(total <= 0){
         alert('Total tidak valid!');
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
+        btn.disabled = false;
+        btn.innerText = 'Bayar';
         return;
     }
 
     if(bayar < total){
         alert('Uang tidak cukup!');
-<<<<<<< HEAD
         btn.disabled = false;
         btn.innerText = 'Bayar';
         return;
     }
 
+    // ================= SET KE FORM (PASTIKAN TERISI)
     document.getElementById('produkInput').value = JSON.stringify(cart);
-    document.getElementById('totalInput').value = total;
     document.getElementById('bayarInput').value = bayar;
 
-=======
-        return;
-    }
+    document.getElementById('subtotalInput').value = subtotalVal;
+    document.getElementById('diskonInput').value   = diskonVal;
+    document.getElementById('ppnInput').value      = ppnVal;
+    document.getElementById('totalInput').value    = total;
 
-    // 6. Proses Pengiriman
-    btn.innerText = 'Memproses...';
-    btn.disabled = true;
+    // ================= DEBUG (opsional)
+    console.log({
+        subtotal: subtotalVal,
+        diskon: diskonVal,
+        ppn: ppnVal,
+        total: total,
+        bayar: bayar
+    });
 
-    // Masukkan JSON payload yang sudah di-map ke input hidden
-    document.getElementById('produkInput').value = JSON.stringify(payload);
-    document.getElementById('bayarInput').value = bayar;
-
-    // 7. Submit
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
+    // ================= SUBMIT
     document.getElementById('formCheckout').submit();
 }
 
@@ -689,54 +524,37 @@ document.addEventListener('DOMContentLoaded', function(){
     });
 
 });
-<<<<<<< HEAD
-=======
 
 document.addEventListener('DOMContentLoaded', function(){
+
     if(typeof resepItems !== 'undefined' && resepItems.length > 0){
-        // Kosongkan keranjang terlebih dahulu jika ingin murni dari resep
-        cart = []; 
 
         resepItems.forEach(r => {
-            // 1. Definisikan ID secara aman (Cek semua kemungkinan nama properti)
-            let idFix = r.produk_id || r.id || r.id_produk; 
-            
-            let konversi = parseInt(r.konversi) || 1;
 
-            // 2. Gunakan idFix untuk membuat key unik
-            let key = idFix + '_' + konversi;
-            
-            // 3. Ambil jumlah asli dari resep
-            let jumlahResep = parseInt(r.jumlah) || parseInt(r.qty) || 1; 
-
-            // 4. Cari apakah item sudah ada di cart menggunakan idFix
-            let existing = cart.find(i => (i.id + '_' + i.konversi) === key);
+            let existing = cart.find(i => i.id == r.produk_id);
 
             if(existing){
-                // Jika sudah ada, tambahkan jumlahnya
-                existing.qty += jumlahResep;
+                existing.qty += parseInt(r.jumlah);
             } else {
-                // 5. Masukkan ke cart (Pastikan 'id' menggunakan idFix)
                 cart.push({
-                    id: idFix, // 🔥 KRUSIAL: Harus terisi angka ID
+                    id: r.produk_id,
                     nama: r.nama_produk,
-                    harga: parseInt(r.harga_jual) || parseInt(r.harga) || 0,
-                    qty: jumlahResep, 
-                    satuan: r.satuan || r.nama_satuan || '-',
-                    konversi: konversi
+                    harga: parseInt(r.harga_jual),
+                    qty: parseInt(r.jumlah)
                 });
             }
+
         });
 
-        // Paksa render ulang setelah semua data masuk
-        render(); 
-        
+        render();
+
         Swal.fire({
             icon: 'success',
             title: 'Resep dimuat',
-            text: 'Berhasil memuat ' + resepItems.length + ' item dari resep.'
+            
         });
     }
+
 });
 
 document.getElementById('bayar').addEventListener('keyup', function(){
@@ -838,5 +656,4 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <script>
 const resepItems = <?= json_encode($resep_items ?? []) ?>;
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
 </script>

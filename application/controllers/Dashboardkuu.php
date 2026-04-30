@@ -25,45 +25,17 @@ class Dashboard extends CI_Controller {
 {
     $data['title'] = 'Dashboard Admin';
 
-<<<<<<< HEAD
     // statistik
-=======
-    // 1. FIX: Sesuaikan nama kolom ke 'stok_minimal'
-    $data['stok_minim_data'] = $this->db->query("
-        SELECT * FROM produk 
-        WHERE stok <= stok_minimal 
-        ORDER BY stok ASC
-    ")->result();
-
-    // 2. FIX: Sesuaikan nama kolom ke 'tanggal_kadaluarsa'
-    $data['expired_soon_data'] = $this->db->query("
-        SELECT *, DATEDIFF(tanggal_kadaluarsa, CURDATE()) as sisa_hari 
-        FROM produk 
-        WHERE tanggal_kadaluarsa <= DATE_ADD(CURDATE(), INTERVAL 6 MONTH)
-        AND tanggal_kadaluarsa > CURDATE()
-        ORDER BY tanggal_kadaluarsa ASC
-    ")->result();
-
-    // Statistik dari Model (Pastikan di Model juga nama kolomnya benar)
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
     $data['total_produk']    = $this->Dashboard_model->totalProduk();
     $data['total_pelanggan'] = $this->Dashboard_model->totalPelanggan();
     $data['kadaluarsa']      = $this->Dashboard_model->produkKadaluarsa();
     $data['stok_rendah']     = $this->Dashboard_model->stokRendah();
 
-<<<<<<< HEAD
     // penjualan
     $data['penjualan_hari_ini'] = $this->Dashboard_model->penjualanHariIni();
 
     // ========================
     // GRAFIK (FIX)
-=======
-    // Penjualan hari ini
-    $data['penjualan_hari_ini'] = $this->Dashboard_model->penjualanHariIni();
-
-    // ========================
-    // GRAFIK PENJUALAN
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
     // ========================
     $raw = $this->Dashboard_model->grafikPenjualan();
 
@@ -91,10 +63,6 @@ class Dashboard extends CI_Controller {
     $data['js'] = 'dashboard.js';
 
 
-<<<<<<< HEAD
-=======
-    // Order Pembelian Terbaru
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
     $data['order'] = $this->db
     ->select('pembelian.*, supplier.nama_supplier')
     ->join('supplier','supplier.id_supplier = pembelian.supplier_id')
@@ -103,14 +71,9 @@ class Dashboard extends CI_Controller {
     ->get('pembelian')
     ->result();
 
-<<<<<<< HEAD
     // ========================
     // VIEW
     // ========================
-=======
-
-    // VIEW
->>>>>>> ee11432ab565d27cb1eddab3a20fae4e15c9c552
     $this->load->view('templates/header', $data);
     $this->load->view('templates/sidebar');
     $this->load->view('dashboard/index', $data);
