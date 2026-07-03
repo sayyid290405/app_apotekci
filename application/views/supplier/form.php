@@ -1,58 +1,203 @@
-<div class="container-fluid">
 
-<div class="card shadow-sm border-0">
-<div class="card-body">
+<div class="page-container">
 
-<h4 class="mb-4">
-<?= isset($supplier) ? '✏️ Edit Supplier' : '➕ Tambah Supplier' ?>
-</h4>
+    <!-- PAGE HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-<form method="post" action="<?= $action ?>">
+        <div>
 
-<input type="hidden" 
-name="<?= $this->security->get_csrf_token_name(); ?>" 
-value="<?= $this->security->get_csrf_hash(); ?>" />
+            <h3 class="fw-bold mb-1">
 
-<div class="row">
+                <i class="fas fa-truck text-success me-2"></i>
 
-<div class="col-md-6 mb-3">
-    <label>Nama Supplier</label>
-    <input type="text" name="nama_supplier" class="form-control"
-           value="<?= $supplier->nama_supplier ?? '' ?>" required>
+                <?= isset($supplier)
+                    ? 'Edit Supplier'
+                    : 'Tambah Supplier' ?>
+
+            </h3>
+
+            <small class="text-muted">
+
+                <?= isset($supplier)
+                    ? 'Perbarui data supplier'
+                    : 'Tambahkan supplier baru ke sistem' ?>
+
+            </small>
+
+        </div>
+
+        <div>
+
+            <a href="<?= base_url('supplier') ?>"
+               class="btn btn-outline-secondary">
+
+                <i class="fas fa-arrow-left me-1"></i>
+
+                Kembali
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- CARD -->
+    <div class="card modern-card">
+
+        <div class="card-header bg-success text-white">
+
+            <i class="fas fa-building me-2"></i>
+
+            Form Data Supplier
+
+        </div>
+
+        <div class="card-body">
+
+            <form method="post"
+                  action="<?= $action ?>">
+
+                <input
+                    type="hidden"
+                    name="<?= $this->security->get_csrf_token_name(); ?>"
+                    value="<?= $this->security->get_csrf_hash(); ?>">
+
+                <div class="row">
+
+                    <!-- NAMA SUPPLIER -->
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-semibold">
+
+                            Nama Supplier
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="nama_supplier"
+                            class="form-control"
+                            value="<?= $supplier->nama_supplier ?? '' ?>"
+                            required>
+
+                    </div>
+
+                    <!-- LEGALITAS -->
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-semibold">
+
+                            Legalitas
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="legalitas"
+                            class="form-control"
+                            value="<?= $supplier->legalitas ?? '' ?>">
+
+                    </div>
+
+                    <!-- ALAMAT -->
+                    <div class="col-md-12 mb-3">
+
+                        <label class="form-label fw-semibold">
+
+                            Alamat
+
+                        </label>
+
+                        <textarea
+                            name="alamat"
+                            rows="4"
+                            class="form-control"><?= $supplier->alamat ?? '' ?></textarea>
+
+                    </div>
+
+                    <!-- KONTAK -->
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label fw-semibold">
+
+                            Kontak
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="kontak"
+                            class="form-control"
+                            value="<?= $supplier->kontak ?? '' ?>">
+
+                    </div>
+
+                </div>
+
+                <!-- BUTTON -->
+                <div class="d-flex gap-2 mt-3">
+
+                    <button
+                        type="submit"
+                        class="btn btn-success">
+
+                        <i class="fas fa-save me-1"></i>
+
+                        Simpan
+
+                    </button>
+
+                    <a
+                        href="<?= base_url('supplier') ?>"
+                        class="btn btn-secondary">
+
+                        <i class="fas fa-times me-1"></i>
+
+                        Batal
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
 </div>
 
-<div class="col-md-6 mb-3">
-    <label>Legalitas</label>
-    <input type="text" name="legalitas" class="form-control"
-           value="<?= $supplier->legalitas ?? '' ?>">
-</div>
+<style>
 
-<div class="col-md-12 mb-3">
-    <label>Alamat</label>
-    <textarea name="alamat" class="form-control"><?= $supplier->alamat ?? '' ?></textarea>
-</div>
+.page-container{
+    padding:24px;
+}
 
-<div class="col-md-6 mb-3">
-    <label>Kontak</label>
-    <input type="text" name="kontak" class="form-control"
-           value="<?= $supplier->kontak ?? '' ?>">
-</div>
+.modern-card{
+    border:none;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 4px 16px rgba(0,0,0,.08);
+}
 
-</div>
+.card-header{
+    border:none;
+    padding:15px 20px;
+    font-weight:600;
+}
 
-<div class="mt-3">
-    <button type="submit" class="btn btn-success">
-        💾 Simpan
-    </button>
+.form-control,
+.form-select,
+textarea{
+    border-radius:10px;
+}
 
-    <a href="<?= base_url('supplier') ?>" class="btn btn-secondary">
-        Batal
-    </a>
-</div>
+.form-label{
+    margin-bottom:.4rem;
+}
 
-</form>
+.btn{
+    border-radius:10px;
+}
 
-</div>
-</div>
-
-</div>
+</style>

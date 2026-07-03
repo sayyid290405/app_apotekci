@@ -41,6 +41,7 @@ class Produk extends CI_Controller {
         $data['kategori'] = $this->Produk_model->getKategori();
         $data['supplier'] = $this->Produk_model->getSupplier();
         $data['action']   = base_url('produk/simpan');
+        $data['mode']     = 'tambah';
 
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar');
@@ -61,18 +62,21 @@ class Produk extends CI_Controller {
             redirect('produk/tambah');
         }
 
-        // ===== UPLOAD GAMBAR =====
-        $upload = $this->uploadGambar();
+        // ===== CEK METODE GAMBAR =====
+        $gambar = null;
+        $mode_gambar = isset($post['mode_gambar']) ? $post['mode_gambar'] : 'url';
 
-        if($upload && !$upload['status']){
-            $this->session->set_flashdata('error', $upload['error']);
-            redirect('produk/tambah');
-        }
-
-        if($upload && $upload['status']){
-            $gambar = $upload['file']; // hanya nama file
+        if($mode_gambar == 'upload'){
+            $upload = $this->uploadGambar();
+            if($upload && !$upload['status']){
+                $this->session->set_flashdata('error', $upload['error']);
+                redirect('produk/tambah');
+            }
+            if($upload && $upload['status']){
+                $gambar = $upload['file'];
+            }
         } else {
-            $gambar = $post['gambar_url'] ?? null;
+            $gambar = !empty($post['gambar_url']) ? $post['gambar_url'] : null;
         }
 
         // ===== DATA SATUAN =====
@@ -80,40 +84,84 @@ class Produk extends CI_Controller {
         $satuan_konversi = $this->input->post('konversi');
         $satuan_harga    = $this->input->post('harga_satuan');
 
-        $harga_jual_utama = isset($satuan_harga[0]) ? $satuan_harga[0] : 0;
-        $satuan_dasar     = isset($satuan_names[0]) ? $satuan_names[0] : 'unit';
+        // Pastikan data satuan ada
+        if(empty($satuan_names)){
+            $this->session->set_flashdata('error', 'Data satuan tidak lengkap');
+            redirect('produk/tambah');
+        }
+
+        // Cari satuan dasar (konversi = 1)
+        $satuan_dasar = 'Tablet';
+        $harga_jual_utama = 0;
+        
+        foreach($satuan_names as $key => $nama){
+            $nama = trim($nama);
+            if(empty($nama)) continue;
+            
+            $konversi = isset($satuan_konversi[$key]) ? (int)$satuan_konversi[$key] : 1;
+            if($konversi == 1){
+                $satuan_dasar = $nama;
+                $harga_jual_utama = isset($satuan_harga[$key]) ? (float)$satuan_harga[$key] : 0;
+                break;
+            }
+        }
+
+        // Jika tidak ada satuan dengan konversi 1, gunakan data pertama
+        if(empty($harga_jual_utama) && !empty($satuan_harga)){
+            $harga_jual_utama = (float)$satuan_harga[0];
+        }
 
         // ===== DATA PRODUK =====
-        $data_produk = [
+        $data_produk = array(
             'nama_produk'        => $post['nama_produk'],
-            'kategori_id'        => $post['kategori_id'],
-            'supplier_id'        => $post['supplier_id'],
-            'harga_beli'         => $post['harga_beli'],
-            'harga_jual'         => $harga_jual_utama,
-            'stok'               => $post['stok'],
-            'stok_minimal'       => $post['stok_minimal'],
-            'tanggal_kadaluarsa' => $post['tanggal_kadaluarsa'],
+            'kategori_id'        => !empty($post['kategori_id']) ? $post['kategori_id'] : null,
+            'supplier_id'        => !empty($post['supplier_id']) ? $post['supplier_id'] : null,
+            'harga_beli'         => !empty($post['harga_beli']) ? (int)$post['harga_beli'] : 0,
+            'harga_jual'         => !empty($post['harga_jual']) ? (int)$post['harga_jual'] : (int)$harga_jual_utama,
+            'stok'               => !empty($post['stok']) ? (int)$post['stok'] : 0,
+            'stok_minimal'       => !empty($post['stok_minimal']) ? (int)$post['stok_minimal'] : 5,
+            'tanggal_kadaluarsa' => !empty($post['tanggal_kadaluarsa']) ? $post['tanggal_kadaluarsa'] : null,
             'gambar'             => $gambar,
-            'satuan_dasar'       => $satuan_dasar
-        ];
+            'satuan_dasar'       => $satuan_dasar,
+            'isi_per_unit'       => !empty($post['isi_per_unit']) ? (int)$post['isi_per_unit'] : 1
+        );
 
         $this->db->trans_start();
 
         // ===== INSERT PRODUK =====
         $produk_id = $this->Produk_model->insert($data_produk);
 
+        if(!$produk_id){
+            $this->db->trans_rollback();
+            $this->session->set_flashdata('error', 'Gagal menyimpan produk');
+            redirect('produk/tambah');
+        }
+
         // ===== INSERT SATUAN =====
         if(!empty($satuan_names)){
-            foreach ($satuan_names as $key => $val) {
+            foreach ($satuan_names as $key => $nama) {
+                $nama = trim($nama);
+                if(empty($nama)) continue;
 
-                if(empty($val)) continue;
+                $konversi = isset($satuan_konversi[$key]) ? (int)$satuan_konversi[$key] : 1;
+                $harga = isset($satuan_harga[$key]) ? (float)$satuan_harga[$key] : 0;
 
-                $this->db->insert('satuan_produk', [
+                // Jika konversi 1, gunakan harga_jual dari produk
+                if($konversi == 1 && !empty($post['harga_jual'])){
+                    $harga = (float)$post['harga_jual'];
+                }
+
+                // Pastikan harga tidak kosong
+                if(empty($harga) && $harga !== 0){
+                    $harga = 0;
+                }
+
+                $this->db->insert('satuan_produk', array(
                     'produk_id'   => $produk_id,
-                    'nama_satuan' => $val,
-                    'konversi'    => $satuan_konversi[$key] ?? 1,
-                    'harga'       => $satuan_harga[$key] ?? 0
-                ]);
+                    'nama_satuan' => $nama,
+                    'konversi'    => $konversi,
+                    'harga'       => $harga
+                ));
             }
         }
 
@@ -135,10 +183,17 @@ class Produk extends CI_Controller {
     {
         $data['title']    = 'Edit Produk';
         $data['produk']   = $this->Produk_model->getById($id);
+        
+        if(!$data['produk']){
+            $this->session->set_flashdata('error', 'Produk tidak ditemukan');
+            redirect('produk');
+        }
+        
         $data['kategori'] = $this->Produk_model->getKategori();
         $data['supplier'] = $this->Produk_model->getSupplier();
-        $data['satuan']   = $this->db->get_where('satuan_produk', ['produk_id' => $id])->result();
+        $data['satuan']   = $this->db->get_where('satuan_produk', array('produk_id' => $id))->result();
         $data['action']   = base_url('produk/update/'.$id);
+        $data['mode']     = 'edit';
 
         $this->load->view('templates/header', $data);
         $this->load->view('templates/sidebar');
@@ -154,19 +209,35 @@ class Produk extends CI_Controller {
         $post = $this->input->post(NULL, TRUE);
         $produk_lama = $this->Produk_model->getById($id);
 
-        // ===== UPLOAD GAMBAR =====
-        $upload = $this->uploadGambar();
-
-        if($upload && !$upload['status']){
-            $this->session->set_flashdata('error', $upload['error']);
-            redirect('produk/edit/'.$id);
+        if(!$produk_lama){
+            $this->session->set_flashdata('error', 'Produk tidak ditemukan');
+            redirect('produk');
         }
 
-        if($upload && $upload['status']){
+        // ===== CEK METODE GAMBAR =====
+        $gambar = $produk_lama->gambar;
+        $mode_gambar = isset($post['mode_gambar']) ? $post['mode_gambar'] : 'url';
+
+        if($mode_gambar == 'upload'){
+            $upload = $this->uploadGambar();
+            if($upload && !$upload['status']){
+                $this->session->set_flashdata('error', $upload['error']);
+                redirect('produk/edit/'.$id);
+            }
+            if($upload && $upload['status']){
+                $this->_hapusGambarLama($produk_lama->gambar);
+                $gambar = $upload['file'];
+            }
+        } elseif($mode_gambar == 'url') {
+            if(!empty($post['gambar_url'])){
+                $this->_hapusGambarLama($produk_lama->gambar);
+                $gambar = $post['gambar_url'];
+            } else {
+                $gambar = $produk_lama->gambar;
+            }
+        } elseif($mode_gambar == 'remove') {
             $this->_hapusGambarLama($produk_lama->gambar);
-            $gambar = $upload['file'];
-        } else {
-            $gambar = !empty($post['gambar_url']) ? $post['gambar_url'] : $produk_lama->gambar;
+            $gambar = null;
         }
 
         // ===== DATA SATUAN =====
@@ -174,18 +245,36 @@ class Produk extends CI_Controller {
         $satuan_konversi = $this->input->post('konversi');
         $satuan_harga    = $this->input->post('harga_satuan');
 
-        $data_produk = [
+        // Cari satuan dasar
+        $satuan_dasar = 'Tablet';
+        $harga_jual_utama = 0;
+        if(!empty($satuan_names)){
+            foreach($satuan_names as $key => $nama){
+                $nama = trim($nama);
+                if(empty($nama)) continue;
+                
+                $konversi = isset($satuan_konversi[$key]) ? (int)$satuan_konversi[$key] : 1;
+                if($konversi == 1){
+                    $satuan_dasar = $nama;
+                    $harga_jual_utama = isset($satuan_harga[$key]) ? (float)$satuan_harga[$key] : 0;
+                    break;
+                }
+            }
+        }
+
+        $data_produk = array(
             'nama_produk'        => $post['nama_produk'],
-            'kategori_id'        => $post['kategori_id'],
-            'supplier_id'        => $post['supplier_id'],
-            'harga_beli'         => $post['harga_beli'],
-            'harga_jual'         => $satuan_harga[0] ?? 0,
-            'stok'               => $post['stok'],
-            'stok_minimal'       => $post['stok_minimal'],
-            'tanggal_kadaluarsa' => $post['tanggal_kadaluarsa'],
+            'kategori_id'        => !empty($post['kategori_id']) ? $post['kategori_id'] : null,
+            'supplier_id'        => !empty($post['supplier_id']) ? $post['supplier_id'] : null,
+            'harga_beli'         => !empty($post['harga_beli']) ? (int)$post['harga_beli'] : 0,
+            'harga_jual'         => !empty($post['harga_jual']) ? (int)$post['harga_jual'] : (int)$harga_jual_utama,
+            'stok'               => !empty($post['stok']) ? (int)$post['stok'] : 0,
+            'stok_minimal'       => !empty($post['stok_minimal']) ? (int)$post['stok_minimal'] : 5,
+            'tanggal_kadaluarsa' => !empty($post['tanggal_kadaluarsa']) ? $post['tanggal_kadaluarsa'] : null,
             'gambar'             => $gambar,
-            'satuan_dasar'       => $satuan_names[0] ?? 'unit'
-        ];
+            'satuan_dasar'       => $satuan_dasar,
+            'isi_per_unit'       => !empty($post['isi_per_unit']) ? (int)$post['isi_per_unit'] : 1
+        );
 
         $this->db->trans_start();
 
@@ -193,19 +282,31 @@ class Produk extends CI_Controller {
         $this->Produk_model->update($id, $data_produk);
 
         // ===== RESET SATUAN =====
-        $this->db->delete('satuan_produk', ['produk_id' => $id]);
+        $this->db->delete('satuan_produk', array('produk_id' => $id));
 
+        // ===== INSERT ULANG SATUAN =====
         if(!empty($satuan_names)){
-            foreach ($satuan_names as $key => $val) {
+            foreach ($satuan_names as $key => $nama) {
+                $nama = trim($nama);
+                if(empty($nama)) continue;
 
-                if(empty($val)) continue;
+                $konversi = isset($satuan_konversi[$key]) ? (int)$satuan_konversi[$key] : 1;
+                $harga = isset($satuan_harga[$key]) ? (float)$satuan_harga[$key] : 0;
 
-                $this->db->insert('satuan_produk', [
+                if($konversi == 1 && !empty($post['harga_jual'])){
+                    $harga = (float)$post['harga_jual'];
+                }
+
+                if(empty($harga) && $harga !== 0){
+                    $harga = 0;
+                }
+
+                $this->db->insert('satuan_produk', array(
                     'produk_id'   => $id,
-                    'nama_satuan' => $val,
-                    'konversi'    => $satuan_konversi[$key] ?? 1,
-                    'harga'       => $satuan_harga[$key] ?? 0
-                ]);
+                    'nama_satuan' => $nama,
+                    'konversi'    => $konversi,
+                    'harga'       => $harga
+                ));
             }
         }
 
@@ -223,39 +324,47 @@ class Produk extends CI_Controller {
     // HAPUS
     // =========================
     public function hapus($id)
-{
-    // 🔍 cek apakah produk dipakai di pembelian
-    $dipakai = $this->db
-        ->where('produk_id', $id)
-        ->count_all_results('detail_pembelian');
+    {
+        // Cek apakah produk dipakai di pembelian
+        $dipakai = $this->db
+            ->where('produk_id', $id)
+            ->count_all_results('detail_pembelian');
 
-    if($dipakai > 0){
-        // ❌ tidak boleh hapus
-        $this->session->set_flashdata('error', 
-            'Produk tidak bisa dihapus karena sudah digunakan dalam transaksi pembelian!'
-        );
+        if($dipakai > 0){
+            $this->session->set_flashdata('error', 
+                'Produk tidak bisa dihapus karena sudah digunakan dalam transaksi pembelian!'
+            );
+            redirect('produk');
+            return;
+        }
+
+        // Cek di detail_pesanan
+        $dipesan = $this->db
+            ->where('produk_id', $id)
+            ->count_all_results('detail_pesanan');
+
+        if($dipesan > 0){
+            $this->session->set_flashdata('error', 
+                'Produk tidak bisa dihapus karena sudah digunakan dalam transaksi penjualan!'
+            );
+            redirect('produk');
+            return;
+        }
+
+        $produk = $this->Produk_model->getById($id);
+
+        if($produk){
+            $this->_hapusGambarLama($produk->gambar);
+
+            $this->db->trans_start();
+            $this->db->delete('satuan_produk', array('produk_id' => $id));
+            $this->Produk_model->delete($id);
+            $this->db->trans_complete();
+        }
+
+        $this->session->set_flashdata('success', 'Produk berhasil dihapus');
         redirect('produk');
-        return;
     }
-
-    // 🔥 lanjut hapus jika aman
-    $produk = $this->Produk_model->getById($id);
-
-    if($produk){
-        $this->_hapusGambarLama($produk->gambar);
-
-        $this->db->trans_start();
-
-        $this->db->delete('satuan_produk', ['produk_id' => $id]);
-        $this->Produk_model->delete($id);
-
-        $this->db->trans_complete();
-    }
-
-    $this->session->set_flashdata('success', 'Produk berhasil dihapus');
-    redirect('produk');
-}
-
 
     // =========================
     // UPLOAD GAMBAR
@@ -264,24 +373,28 @@ class Produk extends CI_Controller {
     {
         if(empty($_FILES['gambar_file']['name'])) return null;
 
+        if(!is_dir('./uploads/')){
+            mkdir('./uploads/', 0777, true);
+        }
+
         $config['upload_path']   = './uploads/';
-        $config['allowed_types'] = 'jpg|jpeg|png|webp';
+        $config['allowed_types'] = 'jpg|jpeg|png|webp|gif';
         $config['max_size']      = 2048;
         $config['encrypt_name']  = TRUE;
 
         $this->load->library('upload', $config);
 
         if(!$this->upload->do_upload('gambar_file')){
-            return [
+            return array(
                 'status' => false,
                 'error'  => strip_tags($this->upload->display_errors())
-            ];
+            );
         }
 
-        return [
+        return array(
             'status' => true,
             'file'   => $this->upload->data('file_name')
-        ];
+        );
     }
 
     // =========================
@@ -291,7 +404,6 @@ class Produk extends CI_Controller {
     {
         if(empty($gambar)) return;
 
-        // skip kalau URL
         if(filter_var($gambar, FILTER_VALIDATE_URL)){
             return;
         }
@@ -303,28 +415,29 @@ class Produk extends CI_Controller {
         }
     }
 
+    // =========================
+    // SEARCH
+    // =========================
     public function search()
-{
-    $keyword = $this->input->get('q');
+    {
+        $keyword = $this->input->get('q');
+        $data = $this->Produk_model->searchProduk($keyword);
+        header('Content-Type: application/json');
+        echo json_encode($data);
+    }
 
-    $data = $this->Produk_model->searchProduk($keyword);
+    // =========================
+    // GET SATUAN
+    // =========================
+    public function getSatuan($produk_id)
+    {
+        $data = $this->db
+            ->where('produk_id', $produk_id)
+            ->order_by('konversi', 'ASC')
+            ->get('satuan_produk')
+            ->result();
 
-    header('Content-Type: application/json');
-    echo json_encode($data);
-}
-
-// =========================
-// GET SATUAN PRODUK (API)
-// =========================
-public function getSatuan($produk_id)
-{
-    $data = $this->db
-        ->where('produk_id', $produk_id)
-        ->order_by('konversi', 'ASC') // satuan terkecil dulu
-        ->get('satuan_produk')
-        ->result();
-
-    header('Content-Type: application/json');
-    echo json_encode($data);
-}
+        header('Content-Type: application/json');
+        echo json_encode($data);
+    }
 }

@@ -107,6 +107,7 @@
             </div>
         </div>
     </div>
+    <br>
 
     <div id="tabelKontrol" class="row">
         <div class="col-12 mb-4">
@@ -126,6 +127,7 @@
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
+
                             <tbody>
                                 <?php if(empty($stok_minim_data)): ?>
                                     <tr><td colspan="5" class="text-center py-4">Semua stok aman.</td></tr>
@@ -137,7 +139,7 @@
                                         <td><?= $sm->stok_minimal ?></td>
                                         <td><span class="badge badge-danger">Kritis</span></td>
                                         <td>
-                                            <a href="<?= base_url('Supplier/tambah') ?>" class="btn btn-sm btn-outline-primary">Order ke Supplier</a>
+                                            <a href="<?= base_url('pembelian') ?>" class="btn btn-sm btn-outline-primary">Order ke Supplier</a>
                                         </td>
                                     </tr>
                                     <?php endforeach; ?>
@@ -150,54 +152,7 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 bg-white">
-                    <h6 class="m-0 font-weight-bold text-primary">📦 Riwayat Order Supplier Terbaru</h6>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Kode</th>
-                                    <th>Supplier</th>
-                                    <th>Tanggal</th>
-                                    <th>Total</th>
-                                    <th>Status</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach($order as $o): ?>
-                                <tr>
-                                    <td><b><?= $o->kode_pembelian ?></b></td>
-                                    <td><?= $o->nama_supplier ?></td>
-                                    <td><?= date('d M Y', strtotime($o->tanggal)) ?></td>
-                                    <td class="text-success font-weight-bold">Rp <?= number_format($o->total,0,',','.') ?></td>
-                                    <td>
-                                        <?php if($o->status == 'menunggu'): ?>
-                                            <span class="badge badge-warning text-dark">Menunggu</span>
-                                        <?php elseif($o->status == 'disetujui'): ?>
-                                            <span class="badge badge-success">Disetujui</span>
-                                        <?php else: ?>
-                                            <span class="badge badge-danger"><?= $o->status ?></span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <a href="<?= base_url('pembelian/detail/'.$o->id_pembelian) ?>" class="btn btn-sm btn-info"><i class="fas fa-eye"></i></a>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    
 </div>
 
 <script>

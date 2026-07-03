@@ -1,5 +1,72 @@
 <?php
 class Kasir_model extends CI_Model {
+    public function simpan($data)
+    {
+        return $this->db->insert('qris', $data);
+    }
+     public function getById($id)
+    {
+        return $this->db
+            ->where('id_pesanan', $id)
+            ->get('pesanan')
+            ->row();
+    }
+
+    // =========================
+    // GET BY PESANAN
+    // =========================
+    public function getByPesanan($pesanan_id)
+    {
+        return $this->db
+            ->where('pesanan_id', $pesanan_id)
+            ->get('qris')
+            ->row();
+    }
+
+    // =========================
+    // GET BY TRANSACTION
+    // =========================
+    public function getByTransaction($transaction_id)
+    {
+        return $this->db
+            ->where('transaction_id', $transaction_id)
+            ->get('qris')
+            ->row();
+    }
+
+    // =========================
+    // UPDATE STATUS
+    // =========================
+    public function updateStatus($transaction_id, $status)
+    {
+        $this->db->where('transaction_id', $transaction_id);
+
+        return $this->db->update('qris', [
+            'status_pembayaran' => $status
+        ]);
+    }
+
+    // =========================
+    // UPDATE QR URL
+    // =========================
+    public function updateQr($pesanan_id, $qr_url)
+    {
+        $this->db->where('pesanan_id', $pesanan_id);
+
+        return $this->db->update('qris', [
+            'qr_url' => $qr_url
+        ]);
+    }
+
+    // =========================
+    // HAPUS
+    // =========================
+    public function hapus($pesanan_id)
+    {
+        return $this->db
+            ->where('pesanan_id', $pesanan_id)
+            ->delete('qris');
+    }
 
     public function getProduk()
 {

@@ -11,15 +11,34 @@ class Auth extends CI_Controller {
     }
 
     // ================= LOGIN PAGE =================
-    public function index(){
-        if ($this->session->userdata('logged_in')) {
-            redirect('dashboard_manajer'); // sesuaikan
-        }
+public function index()
+{
+    if ($this->session->userdata('logged_in')) {
 
-        $data['title'] = 'Login';
-        $this->load->view('auth/login', $data);
+        switch ($this->session->userdata('role_id')) {
+
+            case 1:
+                redirect('dashboard');
+                break;
+
+            case 2:
+                redirect('supplier/laporan_pembelian');
+                break;
+
+            case 3:
+                redirect('users');
+                break;
+
+            default:
+                $this->session->sess_destroy();
+                redirect('auth');
+                break;
+        }
     }
 
+    $data['title'] = 'Login';
+    $this->load->view('auth/login', $data);
+}
     // ================= PROCESS LOGIN =================
     public function process(){
 
@@ -56,19 +75,22 @@ class Auth extends CI_Controller {
         ]);
 
         // redirect berdasarkan role
-        switch($user->role_id){
-            case 1:
-                redirect('dashboard'); // admin
-                break;
-            case 2:
-                redirect('kasir');
-                break;
-            case 3:
-                redirect('Users'); // manajer
-                break;
-            default:
-                redirect('auth');
-        }
+switch($user->role_id){
+    case 1:
+        $this->session->set_flashdata('success', 'Selamat datang Admin');
+        redirect('dashboard');
+        break;
+
+    case 2:
+        $this->session->set_flashdata('success', 'Selamat datang Supplier');
+        redirect('supplier/laporan_pembelian');
+        break;
+
+    case 3:
+        $this->session->set_flashdata('success', 'Selamat datang Manajer');
+        redirect('Users');
+        break;
+}
     }
 
     // ================= REGISTER =================
@@ -103,8 +125,23 @@ class Auth extends CI_Controller {
     }
 
     // ================= LOGOUT =================
-    public function logout(){
-        $this->session->sess_destroy();
-        redirect('auth');
+public function logout()
+{
+    if ($this->session->userdata('logged_in')) {
+
+        $this->session->unset_userdata([
+            'logged_in',
+            'id_user',
+            'nama',
+            'email',
+            'role_id'
+        ]);
+
+        $this->session->set_flashdata('success', 'Berhasil logout');
+    } else {
+        $this->session->set_flashdata('error', 'Anda belum login');
     }
+
+    redirect('auth');
+}
 }

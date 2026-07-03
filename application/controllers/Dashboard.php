@@ -80,7 +80,7 @@ class Dashboard extends CI_Controller {
 
 
     // Order Pembelian Terbaru
-    $data['order'] = $this->db
+    $data['order'] = $this->db  
     ->select('pembelian.*, supplier.nama_supplier')
     ->join('supplier','supplier.id_supplier = pembelian.supplier_id')
     ->order_by('id_pembelian','DESC')
@@ -89,6 +89,7 @@ class Dashboard extends CI_Controller {
     ->result();
 
     $this->load->view('templates/sidebar');
+     $this->load->view('templates/header', $data);
     $this->load->view('dashboard/index', $data);
     $this->load->view('templates/footer');
 }

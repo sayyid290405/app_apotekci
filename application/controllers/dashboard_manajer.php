@@ -49,32 +49,32 @@ class Dashboard_manajer extends CI_Controller
         $this->load->view('statistik/export_penjualan', $data);
     }
 
-    public function stok_obat()
-    {
-        $data['produk'] = $this->Dashboard_manajer_model->get_all_obat();
-        $data['total_stok'] = $this->Dashboard_manajer_model->get_total_stok();
-        $data['stok_minim'] = $this->Dashboard_manajer_model->get_stok_minim_obat();
-        $data['kadaluarsa'] = $this->Dashboard_manajer_model->get_kadaluarsa();
-
-        $this->load->view('manajer/templates/header');
-        $this->load->view('manajer/templates/sidebar_manajer');
-        $this->load->view('statistik/grafik_stok', $data);
-        $this->load->view('manajer/templates/footer');
-    }
-
-public function export_stok()
+public function stok_obat()
 {
-    $this->load->model('Dashboard_manajer_model');
+    // Pakai method yang sudah JOIN dengan kategori
+    $data['produk'] = $this->Dashboard_manajer_model->get_produk_with_kategori();
+    $data['total_stok'] = $this->Dashboard_manajer_model->get_total_stok();
+    $data['stok_minim'] = $this->Dashboard_manajer_model->get_stok_minim_obat();
+    $data['kadaluarsa'] = $this->Dashboard_manajer_model->get_kadaluarsa();
+    $data['stat_kategori'] = $this->Dashboard_manajer_model->get_statistik_kategori();
 
-    $data['produk']       = $this->Dashboard_manajer_model->get_all_obat();
-    $data['total_stok']   = $this->Dashboard_manajer_model->get_total_stok();
-    $data['stok_minim']   = $this->Dashboard_manajer_model->get_stok_minim_obat(); 
-    $data['kadaluarsa']   = $this->Dashboard_manajer_model->get_kadaluarsa();      
+    $this->load->view('manajer/templates/header', $data);
+    $this->load->view('manajer/templates/sidebar_manajer');
+    $this->load->view('statistik/grafik_stok', $data);
+    $this->load->view('manajer/templates/footer');
+}
 
-    header("Content-Type: application/vnd.ms-excel");
-    header("Content-Disposition: attachment; filename=laporan_stok_obat.xls");
-
-    $this->load->view('statistik/export_stok', $data);
+public function export_stok_excel()
+{
+    $data['produk'] = $this->Dashboard_manajer_model->get_produk_with_kategori();
+    $data['total_stok'] = $this->Dashboard_manajer_model->get_total_stok();
+    $data['stok_minim'] = $this->Dashboard_manajer_model->get_stok_minim_obat();
+    $data['kadaluarsa'] = $this->Dashboard_manajer_model->get_kadaluarsa();
+    
+    $this->load->view('statistik/export_stok_excel', $data);
+    
+    header('Content-Type: application/vnd.ms-excel');
+    header('Content-Disposition: attachment; filename="Laporan_Stok_Obat_' . date('Ymd_His') . '.xls"');
 }
 
 }

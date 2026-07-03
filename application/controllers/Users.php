@@ -35,7 +35,7 @@ public function create()
     $data['roles'] = $this->Users_model->getAllRoles(); // 🔥 WAJIB
 
     $this->load->view('templates/header',$data);
-    $this->load->view('templates/sidebar');
+    $this->load->view('manajer/templates/sidebar_manajer');
     $this->load->view('users/create',$data);
     $this->load->view('templates/footer');
 }

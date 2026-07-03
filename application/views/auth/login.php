@@ -10,6 +10,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+
 <style>
 body {
     height: 100vh;
@@ -39,8 +40,8 @@ body {
 <div class="card shadow-lg p-4">
 
 <div class="text-center mb-4">
-<h3 class="brand">MyApotek</h3>
-<p class="text-muted">Silakan login ke sistem</p>
+<h3 class="brand">Gempas Farma 🩺</h3>
+<p class="text-muted">Silahkan login untuk melanjutkan</p>
 </div>
 
 <!-- ALERT -->
@@ -94,7 +95,6 @@ Login
 
 <div class="text-center">
 <a href="<?= site_url('auth/register'); ?>">
-Belum punya akun? Daftar
 </a>
 </div>
 

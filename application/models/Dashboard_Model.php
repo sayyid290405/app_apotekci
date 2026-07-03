@@ -3,9 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Dashboard_model extends CI_Model {
 
-    // =========================
-    // TOTAL PRODUK
-    // =========================
+    
+
     public function totalProduk()
     {
         return $this->db->count_all('produk');
